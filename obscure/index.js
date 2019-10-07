@@ -1,69 +1,61 @@
 $( document ).ready(function() {
     const  $todoBTN = $("#todoBtn");
     const $todoInput = $("#todoInput"); 
-    let $dltTd = $("#delete-td")
+    const $DltCTasks = $("#DeleteCTasks")
+    const $dltAll = $("#deleteAll")
     let mass = []
+
+$dltAll.on("click", function () {
+        mass.length = 0
+        render()
+})
      
+$DltCTasks.on( "click", function (){
+mass = mass.filter(function(item){
+    return !item.checked;
+})   
+render()
+})
+
     $todoBTN.on( "click", function () {
         AddListTask()
-        // const text = $todoInput.val();
-        // const newTodo ={
-        //     text:text,
-        //     checked:false,
-        //     id:Date.now(),
-        // }
-        // mass.push(newTodo);
-        // render()
-       
-        // console.log(mass);
-        // $(`#out-todo`).html(`<p>${text}</p>`)
-    });
+});
 
     function AddListTask(){
         const text = $todoInput.val().trim();
         console.log(text)
         const newTodo ={
-            text:text.trim(),
+            text:text.trim(), 
             checked:false,
             id:Date.now(),
         }
+        if (text == "")
+        return
         mass.push(newTodo);
-        render()
-    }
-
-
-// доделать value
-// сохранение аналогично добавлению таска
-    $(document).on(`dblclick`,`.text-todo`, function (){
-        //console.log(2222)
-        // $("text:text").dblclick(function () {
-        $(this).replaceWith(`<input type="text" 
+render()
+}
+ 
+$(document).on(`dblclick`,`.text-todo`, function (){
+    $(this).replaceWith(`<input type="text" 
                             class="new-input"/>`)
-        console.log(this)                    
-        
-    })
-    $(document).on('keypress',`.new-input`, function(ent) {
-        console.log('here')
+})
+
+$(document).on('keypress',`.new-input`, function(ent) {
           if(ent.which == 13) {
            let id =  $(this).parent().attr(`id`)    
            let newText =  $(this).val().trim();  
            mass.forEach(item=>{
           if(id == item.id){
-        //    newText > "0";
           if (newText !== "") {
               item.text  = newText
-         }
-           render() ;
-         //      console.log(id)
-         //  console.log(newText)
-           }
-        })   
-        }
-    });
+}
+render() ;
+}
+})   
+}
+});
     
-     
     function render (){
-                console.log(mass)
         let str = ''
         mass.forEach(item => {
             str += `
@@ -76,44 +68,32 @@ $( document ).ready(function() {
                 <span class="text-todo">${item.text}</span>
                 <button class="delete-td">X</button>
             </li>`
-            // console.log('###########')
-            // console.log('item' , item.text)
-            // console.log('item.id' , item.id)
-            // console.log(str)
-        });
-        $(`#out-todo`).html(str)
-        // $( ".todoInput" ).append( $( ) );
-        // let $dltAdd = $("#deleteAdd")
-        // $dltAdd.on( "click", function() {
-        // }
-    }
-    $(document).on(`change`, `.check-todo`, function(){
-        // console.log(mass)
+});
+$(`#out-todo`).html(str)
+}
+
+$(document).on(`change`, `.check-todo`, function(){
        let a =  $(this).parent().attr(`id`) ;
        mass.forEach(item=>{
            if(a == item.id){
                item.checked  = !item.checked ;
-            //    console.log(item.check)
            }
-       })
-       render() ;
-    })
-    $(document).on( "click", '.delete-td', function ()  {
+})
+render() ;
+})
+
+$(document).on( "click", '.delete-td', function ()  {
         let b =  $(this).parent().attr(`id`) ;
-    console.log('b',b)
         mass.forEach((item, index)=>{
         if(b == item.id){
             mass.splice( index , 1) ;
         }
         render()
-        })     
-    })
+})     
+})
     $(`#todoInput`).on('keypress',function(ent) {
         if(ent.which == 13) {
-       // mass.push(newTodo)
         AddListTask() ;
-        // render() ;
-        }
+        }    
 })
 })
-// })
