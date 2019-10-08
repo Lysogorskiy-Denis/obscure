@@ -1,3 +1,6 @@
+const todoOnPage = 5;
+let nowPage = 1;
+
 $(document).ready(function() {
   const $todoBTN = $("#todoBtn");
   const $todoInput = $("#todoInput");
@@ -7,9 +10,9 @@ $(document).ready(function() {
   let mass = [];
 
   $dltAll.on("click", function() {
-    mass.length = 0;
+    mass = [];
     render()
-    countTrue()
+
   });
 
   $DltCTasks.on("click", function() {
@@ -17,14 +20,10 @@ $(document).ready(function() {
       return !item.checked;
     });
     render();
-    countTrue()
-    
   });
 
   $todoBTN.on("click", function() {
     AddListTask();
-    countTrue()
-    
   });
 
   function AddListTask() {
@@ -38,7 +37,6 @@ $(document).ready(function() {
     mass.push(newTodo);
     $todoInput.prop("value","")
     render();
-    countTrue()
   }
 
   $(document).on(`dblclick`, `.text-todo`, function() {
@@ -61,33 +59,74 @@ $(document).ready(function() {
           if (newText !== "") {
             item.text = newText;
           }
-          render();
-          countTrue()
         }
       });
+      render();
     }
   });
 
   function render() {
     countTrue()
     const isEveryChecked = mass.every(function(item){return item.checked});
-	$('#checkbox-all').prop('checked', isEveryChecked);
-      console.log('mass', mass)
+    $('#checkbox-all').prop('checked', isEveryChecked);
+    let howMachPage = Math.ceil(mass.length/todoOnPage)
+    if(howMachPage<1) howMachPage = 1;
+    $(`#pagination`).html("");
+
+    if(howMachPage>1){
+
+      let stringPagination = "<button id=left> < </button>";
+      for(i=1;i<=howMachPage;++i){
+        stringPagination += `
+        <button id=${i} class=pgntn >${i} </button>`
+
+      }
+      stringPagination +=" <button id=right> > </button>"
+      $(`#pagination`).html(stringPagination);
+    }
+    
     let str = "";
-    mass.forEach(item => {
-      str += `
-            <li id="${item.id}">
-                <input 
-                    type="checkbox" 
-                    class="check-todo" 
-                    ${item.checked ? "checked" : ""} 
-                >
-                <span class="text-todo">${item.text}</span>
-                <button class="delete-td">X</button>
-            </li>`;
+    if(howMachPage<nowPage){
+      nowPage=howMachPage
+    }
+
+    mass.forEach((item, i) => {
+      if(((nowPage-1)*todoOnPage)<=i && i<(nowPage*5)){
+        str += `
+              <li id="${item.id}">
+                  <input 
+                      type="checkbox" 
+                      class="check-todo" 
+                      ${item.checked ? "checked" : ""} 
+                  >
+                  <span class="text-todo">${item.text}</span>
+                  <button class="delete-td">X</button>
+              </li>`;
+      }
     });
+
     $(`#out-todo`).html(str);
+
   }
+  $(document).on(`click`, '#left', function(){
+    
+  if( nowPage > 1) --nowPage;
+  console.log(nowPage)
+  render()
+  })
+
+  $(document).on(`click`, '#right', function(){
+    ++nowPage;
+    render()
+    })
+  
+
+  $(document).on(`click`, '.pgntn', function(){
+
+    nowPage = $(this).attr(`id`);
+    render();
+  })
+
 
   $(document).on(`change`, `.check-todo`, function() {
     let a = $(this)
@@ -99,7 +138,7 @@ $(document).ready(function() {
       }
     });
     render()
-    countTrue();
+
   });
 
   $(document).on("click", ".delete-td", function() {
@@ -111,7 +150,6 @@ $(document).ready(function() {
         mass.splice(index, 1);
       }
       render();
-      countTrue();
     });
   });
   $(`#todoInput`).on("keypress", function(ent) {
@@ -126,20 +164,17 @@ $(document).ready(function() {
     item.checked = check
 })
 render();
-countTrue();
 })
 
 
 function countTrue() {
-let complete = mass.filter(item => item.checked===true)
-lengthTrue = complete.length
-$("#completeTrue").html(lengthTrue)
-let lengthFull = mass.length
-let notDone = lengthFull - lengthTrue
-$("#completeFalse").html(notDone)
-complete.forEach();
-render()
-console.log('complete', complete)
+  let complete = mass.filter(item => item.checked===true)
+  lengthTrue = complete.length
+  $("#completeTrue").html(lengthTrue)
+  
+  let notDone = mass.length - lengthTrue
+  $("#completeFalse").html(notDone)
+
 }
 
 //function render(complete) { 
