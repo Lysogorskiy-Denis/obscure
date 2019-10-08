@@ -1,72 +1,120 @@
-$( document ).ready(function() {
-    const  $todoBTN = $("#todoBtn");
-    const $todoInput = $("#todoInput"); 
-    let $dltTd = $("#delete-td")
-    let mass = []
-     
-    $todoBTN.on( "click", function(ent) {
-        const text = $todoInput.val();
-        const newTodo ={
-            text:text,
-            checked:false,
-            id:Date.now(),
-        }
-        mass.push(newTodo);
-        render()
-        // console.log(mass);
-        // $(`#out-todo`).html(`<p>${text}</p>`)
+$(document).ready(function() {
+  const $todoBTN = $("#todoBtn");
+  const $todoInput = $("#todoInput");
+  const $DltCTasks = $("#DeleteCTasks");
+  const $dltAll = $("#deleteAll");
+  let $btnSelect = $("#checkbox");
+  let mass = [];
+
+  $dltAll.on("click", function() {
+    mass.length = 0;
+    render();
+  });
+
+  $DltCTasks.on("click", function() {
+    mass = mass.filter(function(item) {
+      return !item.checked;
     });
+    render();
+  });
 
-    function render (){
-                console.log(mass)
+  $todoBTN.on("click", function() {
+    AddListTask();
+  });
 
-        let str = ''
-        mass.forEach(item => {
-            str += `<li id="${item.id}"><input type="checkbox" class="check-todo" ${item.checked ? 'checked' : ''} >${item.text}<button class="delete-td">X</button></li>`
-            // console.log('###########')
-            // console.log('item' , item.text)
-            // console.log('item.id' , item.id)
-            // console.log(str)
-        });
-        $(`#out-todo`).html(str)
-        // $( ".todoInput" ).append( $( ) );
-        // let $dltAdd = $("#deleteAdd")
-        // $dltAdd.on( "click", function() {
-        // }
+  function AddListTask() {
+    const text = $todoInput.val().trim();
+    const newTodo = {
+      text: text.trim(),
+      checked: false,
+      id: Date.now()
+    };
+    if (text == "") return;
+    mass.push(newTodo);
+    $todoInput.prop("value","")
+    render();
+  }
+
+  $(document).on(`dblclick`, `.text-todo`, function() {
+    $(this).replaceWith(`<input type="text.val" 
+                            id="newText"
+                            class="new-input"
+                            value="${$(this).text()}"/>`);
+  });
+
+  $(document).on("keypress", `.new-input`, function(ent) {
+    if (ent.which == 13) {
+      let id = $(this)
+        .parent()
+        .attr(`id`);
+      let newText = $(this)
+        .val()
+        .trim();
+      mass.forEach(item => {
+        if (id == item.id) {
+          if (newText !== "") {
+            item.text = newText;
+          }
+          render();
+        }
+      });
     }
+  });
 
-    $(document).on(`change`, `.check-todo`, function(){
-        // console.log(mass)
-
-       let a =  $(this).parent().attr(`id`) ;
-       mass.forEach(item=>{
-           if(a == item.id){
-               item.checked  = !item.checked ;
-            //    console.log(item.check)
-           }
-       })
-       render() ;
-    })
-    
-    $(document).on( "click", '.delete-td', function()  {
-        let b =  $(this).parent().attr(`id`) ;
-    console.log('b',b)
-        mass.forEach((item, index)=>{
-        if(b == item.id){
-            mass.splice( index , 1) ;
-        }
-        render()
-        })     
-    })
-
-    
-    $(document).on('keypress',function(e) {
-        if(e.which == 13) {
-        mass.push(newTodo);
-        render()
-        }
-        })
-
-        
+  function render() {
+    const isEveryChecked = mass.every(function(item){return item.checked});
+	$('#checkbox-all').prop('checked', isEveryChecked);
+      console.log('mass', mass)
+    let str = "";
+    mass.forEach(item => {
+      str += `
+            <li id="${item.id}">
+                <input 
+                    type="checkbox" 
+                    class="check-todo" 
+                    ${item.checked ? "checked" : ""} 
+                >
+                <span class="text-todo">${item.text}</span>
+                <button class="delete-td">X</button>
+            </li>`;
     });
+    $(`#out-todo`).html(str);
+  }
+
+  $(document).on(`change`, `.check-todo`, function() {
+    let a = $(this)
+      .parent()
+      .attr(`id`);
+    mass.forEach(item => {
+      if (a == item.id) {
+        item.checked = !item.checked;
+      }
+    });
+    render();
+  });
+
+  $(document).on("click", ".delete-td", function() {
+    let b = $(this)
+      .parent()
+      .attr(`id`);
+    mass.forEach((item, index) => {
+      if (b == item.id) {
+        mass.splice(index, 1);
+      }
+      render();
+    });
+  });
+  $(`#todoInput`).on("keypress", function(ent) {
+    if (ent.which == 13) {
+      AddListTask();
+    }
+  });
+
+  $("#checkbox-all").on("change", function() {
+    let check =  $("#checkbox-all").prop(`checked`);
+    mass.forEach((item) => {
+    item.checked = check
+})
+render()
+})
 })
