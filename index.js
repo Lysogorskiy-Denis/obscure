@@ -8,7 +8,8 @@ $(document).ready(function() {
 
   $dltAll.on("click", function() {
     mass.length = 0;
-    render();
+    render()
+    countTrue()
   });
 
   $DltCTasks.on("click", function() {
@@ -16,10 +17,14 @@ $(document).ready(function() {
       return !item.checked;
     });
     render();
+    countTrue()
+    
   });
 
   $todoBTN.on("click", function() {
     AddListTask();
+    countTrue()
+    
   });
 
   function AddListTask() {
@@ -33,6 +38,7 @@ $(document).ready(function() {
     mass.push(newTodo);
     $todoInput.prop("value","")
     render();
+    countTrue()
   }
 
   $(document).on(`dblclick`, `.text-todo`, function() {
@@ -56,12 +62,14 @@ $(document).ready(function() {
             item.text = newText;
           }
           render();
+          countTrue()
         }
       });
     }
   });
 
   function render() {
+    countTrue()
     const isEveryChecked = mass.every(function(item){return item.checked});
 	$('#checkbox-all').prop('checked', isEveryChecked);
       console.log('mass', mass)
@@ -90,7 +98,8 @@ $(document).ready(function() {
         item.checked = !item.checked;
       }
     });
-    render();
+    render()
+    countTrue();
   });
 
   $(document).on("click", ".delete-td", function() {
@@ -102,6 +111,7 @@ $(document).ready(function() {
         mass.splice(index, 1);
       }
       render();
+      countTrue();
     });
   });
   $(`#todoInput`).on("keypress", function(ent) {
@@ -115,6 +125,25 @@ $(document).ready(function() {
     mass.forEach((item) => {
     item.checked = check
 })
-render()
+render();
+countTrue();
 })
+
+
+function countTrue() {
+let complete = mass.filter(item => item.checked===true)
+lengthTrue = complete.length
+$("#completeTrue").html(lengthTrue)
+let lengthFull = mass.length
+let notDone = lengthFull - lengthTrue
+$("#completeFalse").html(notDone)
+complete.forEach();
+render()
+console.log('complete', complete)
+}
+
+//function render(complete) { 
+  //  complete.forEach(()=>{})
+ //  }
+
 })
