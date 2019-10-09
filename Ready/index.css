@@ -1,0 +1,11 @@
+#todoInput{
+    margin-left: 150px; 
+    width: 50%;
+display: inline;
+}
+#todoBtn{
+    /* margin-left: 450px; */
+    margin-bottom: 6.3px;
+    /* width: 10%; */ 
+    display: inline;
+}

@@ -30,7 +30,9 @@ $(document).ready(function() {
   function AddListTask() {
 
     
-    const text = $todoInput.val().trim().replace(/&/g, '').replace(/~/g, '').replace(/{/g, '').replace(/'/g, '').replace(/#/g, '').replace(/</g, '').replace(/}/g, '').replace(/>/g, '');
+    const text = $todoInput.val()
+                .trim().replace(/&/g, '')
+                .replace(/~/g, '').replace(/{/g, '').replace(/'/g, '').replace(/#/g, '').replace(/</g, '').replace(/}/g, '').replace(/>/g, '');
     const newTodo = {
       text: text.trim(),
       checked: false,
@@ -76,12 +78,18 @@ $(document).ready(function() {
     if(howMachPage<1) howMachPage = 1;
     $(`#pagination`).html("");
     if(howMachPage>1){
-      let stringPagination = "<button id=left> < </button>";
+      let stringPagination = '<nav aria-label="Page navigation example">'
+                            +` <ul class="pagination"> <li id = left class="page-item ${1==nowPage? "disabled" :""} "> `
+                            +' <a class="page-link" href="#" aria-label="Previous"> '
+                            +'<span aria-hidden="true">&laquo;</span>   </a></li>'
       for(i=1;i<=howMachPage;++i){
+        console.log(i)
+        console.log(nowPage)
+        console.log(i==nowPage)
         stringPagination += `
-        <button id=${i} class=pgntn >${i} </button>`
+        <li id=${i} class="page-item pgntn ${i==nowPage? "disabled" :""}"><a class="page-link" href="#">${i}</a></li>`
       }
-      stringPagination +=" <button id=right> > </button>"
+      stringPagination +=`<li id = right class="page-item ${howMachPage == nowPage? "disabled" :""} "><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li >  </ul></nav>`
       $(`#pagination`).html(stringPagination);
     }
     
