@@ -1,6 +1,7 @@
 const todoOnPage = 5;
 let nowPage = 1;
 
+
 $(document).ready(function() {
   const $todoBTN = $("#todoBtn");
   const $todoInput = $("#todoInput");
@@ -8,18 +9,18 @@ $(document).ready(function() {
   const $dltAll = $("#deleteAll");
   let $btnSelect = $("#checkbox");
   let mass = [];
+  
 
   $dltAll.on("click", function() {
     mass = [];
-    render()
-
+    render(mass)
   });
 
   $DltCTasks.on("click", function() {
     mass = mass.filter(function(item) {
       return !item.checked;
     });
-    render();
+    render(mass);
   });
 
   $todoBTN.on("click", function() {
@@ -36,7 +37,7 @@ $(document).ready(function() {
     if (text == "") return;
     mass.push(newTodo);
     $todoInput.prop("value","")
-    render();
+    render(mass);
   }
 
   $(document).on(`dblclick`, `.text-todo`, function() {
@@ -61,25 +62,23 @@ $(document).ready(function() {
           }
         }
       });
-      render();
+      render(mass);
     }
   });
 
-  function render() {
+  function render(glob) {
+    console.log('glob', glob)
     countTrue()
-    const isEveryChecked = mass.every(function(item){return item.checked});
+    let isEveryChecked = glob.every(function(item){return item.checked});
     $('#checkbox-all').prop('checked', isEveryChecked);
-    let howMachPage = Math.ceil(mass.length/todoOnPage)
+    let howMachPage = Math.ceil(glob.length/todoOnPage)
     if(howMachPage<1) howMachPage = 1;
     $(`#pagination`).html("");
-
     if(howMachPage>1){
-
       let stringPagination = "<button id=left> < </button>";
       for(i=1;i<=howMachPage;++i){
         stringPagination += `
         <button id=${i} class=pgntn >${i} </button>`
-
       }
       stringPagination +=" <button id=right> > </button>"
       $(`#pagination`).html(stringPagination);
@@ -90,7 +89,7 @@ $(document).ready(function() {
       nowPage=howMachPage
     }
 
-    mass.forEach((item, i) => {
+    glob.forEach((item, i) => {
       if(((nowPage-1)*todoOnPage)<=i && i<(nowPage*5)){
         str += `
               <li id="${item.id}">
@@ -102,31 +101,25 @@ $(document).ready(function() {
                   <span class="text-todo">${item.text}</span>
                   <button class="delete-td">X</button>
               </li>`;
-      }
+      };
     });
-
     $(`#out-todo`).html(str);
+  };
 
-  }
   $(document).on(`click`, '#left', function(){
-    
   if( nowPage > 1) --nowPage;
-  console.log(nowPage)
-  render()
+  render(mass)
   })
 
   $(document).on(`click`, '#right', function(){
     ++nowPage;
-    render()
+    render(mass)
     })
-  
 
   $(document).on(`click`, '.pgntn', function(){
-
     nowPage = $(this).attr(`id`);
-    render();
+    render(mass);
   })
-
 
   $(document).on(`change`, `.check-todo`, function() {
     let a = $(this)
@@ -137,8 +130,7 @@ $(document).ready(function() {
         item.checked = !item.checked;
       }
     });
-    render()
-
+    render(mass)
   });
 
   $(document).on("click", ".delete-td", function() {
@@ -149,7 +141,7 @@ $(document).ready(function() {
       if (b == item.id) {
         mass.splice(index, 1);
       }
-      render();
+      render(mass);
     });
   });
   $(`#todoInput`).on("keypress", function(ent) {
@@ -163,22 +155,32 @@ $(document).ready(function() {
     mass.forEach((item) => {
     item.checked = check
 })
-render();
+render(mass);
 })
-
 
 function countTrue() {
   let complete = mass.filter(item => item.checked===true)
   lengthTrue = complete.length
   $("#completeTrue").html(lengthTrue)
-  
   let notDone = mass.length - lengthTrue
   $("#completeFalse").html(notDone)
-
+  
 }
 
-//function render(complete) { 
-  //  complete.forEach(()=>{})
- //  }
+$(document).on("click", "#btnCompleteTrue", function() {
+  const complete1 = mass.filter(item => item.checked===true)
+  console.log('complete1', complete1)
+render(complete1)
+  })
+
+$(document).on("click", "#btnCompleteFalse", function() {
+  const notComplete = mass.filter(item => item.checked===false)
+  console.log('notComplete', notComplete)
+  render(notComplete)
+})
+
+$(document).on("click", "#showAll", function() {
+render(mass)
+})
 
 })
