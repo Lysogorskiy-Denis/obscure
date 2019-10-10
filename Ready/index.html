@@ -8,9 +8,9 @@
 <body>
   
   <h2>ToDo list</h2>
-  <h4><button id = btnCompleteTrue class="btn btn-info">Completed:</button> <strong id=completeTrue> </strong></h4 >
-  <h4><button id = btnCompleteFalse class="btn btn-secondary">Not done:</button><strong id=completeFalse></strong></h4>
-  <h5><button id=showAll class="btn btn-success">Show all tasks</button></h5>
+  <h4><button id = btnCompleteTrue class="btn btn-info disabled marker">Completed:</button> <strong id=completeTrue> </strong></h4 >
+  <h4><button id = btnCompleteFalse class="btn btn-secondary disabled marker">Not done:</button><strong id=completeFalse></strong></h4>
+  <h5><button id=showAll class="btn btn-success disabled marker">Show all tasks</button></h5>
   <div>
   <button id="DeleteCTasks" class="btn btn-primary">Delete completed tasks</button>
   </div>
@@ -19,14 +19,16 @@
   <div id="list"></div>
   </div>
   <button id="deleteAll" class="btn btn-danger">Сlear the list</button>
-  <input type="checkbox" id="checkbox-all"> Select all 
+  <input type="checkbox"  id="checkbox-all" > Select all 
+
   <div>
     <label> Task list </label>
   <ul id="out-todo"></ul>             
   </div>  
   <div id="pagination"> </div>
   <script src="jquery-3.4.1.js"></script>
-  <script src="bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous" ></script>
+  <script src="bootstrap.min.js"></script> 
   <script src="./index.js"></script>
   
 </body>

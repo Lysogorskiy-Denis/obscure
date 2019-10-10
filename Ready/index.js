@@ -22,7 +22,7 @@ $(document).ready(function() {
     });
     verification()
   });
-
+  
   $todoBTN.on("click", function() {
     AddListTask();
   });
@@ -31,15 +31,16 @@ $(document).ready(function() {
 
     
     const text = $todoInput.val()
-                .trim().replace(/&/g, '')
-                .replace(/~/g, '').replace(/{/g, '').replace(/'/g, '').replace(/#/g, '').replace(/</g, '').replace(/}/g, '').replace(/>/g, '');
+                .trim().replace(/&/g, '&amp;').replace(/~/g, '').replace(/{/g, '')  
+                .replace(/"/g, '&quot;').replace(/#/g, '').replace(/</g, '&lt;')
+                .replace(/}/g, '').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/=/g, '&#x3D;');
     const newTodo = {
       text: text.trim(),
       checked: false,
       id: Date.now()
     };
     if (text == "") return;
-    mass.push(newTodo);
+    mass.unshift(newTodo);
     $todoInput.prop("value","")
     verification()
   }
@@ -58,7 +59,9 @@ $(document).ready(function() {
         .attr(`id`);
       let newText = $(this)
         .val()
-        .trim();
+        .trim().trim().replace(/&/g, '&amp;').replace(/~/g, '').replace(/{/g, '')  
+        .replace(/"/g, '&quot;').replace(/#/g, '').replace(/</g, '&lt;')
+        .replace(/}/g, '').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/=/g, '&#x3D;');
       mass.forEach(item => {
         if (id == item.id) {
           if (newText !== "") {
@@ -83,13 +86,10 @@ $(document).ready(function() {
                             +' <a class="page-link" href="#" aria-label="Previous"> '
                             +'<span aria-hidden="true">&laquo;</span>   </a></li>'
       for(i=1;i<=howMachPage;++i){
-        console.log(i)
-        console.log(nowPage)
-        console.log(i==nowPage)
         stringPagination += `
-        <li id=${i} class="page-item pgntn ${i==nowPage? "disabled" :""}"><a class="page-link" href="#">${i}</a></li>`
+        <li id=${i} class="page-item pgntn ${i==nowPage? "active" :""}"><a class="page-link" href="#">${i}</a></li>`
       }
-      stringPagination +=`<li id = right class="page-item ${howMachPage == nowPage? "disabled" :""} "><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li >  </ul></nav>`
+      stringPagination +=`<li id = right class="page-item ${howMachPage == nowPage? "disabled" :""}"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li ></ul></nav>`
       $(`#pagination`).html(stringPagination);
     }
     
@@ -104,11 +104,11 @@ $(document).ready(function() {
               <li id="${item.id}">
                   <input 
                       type="checkbox" 
-                      class="check-todo" 
+                      class="check-todo "  
                       ${item.checked ? "checked" : ""} 
                   >
                   <span class="text-todo">${item.text}</span>
-                  <button class="delete-td">X</button>
+                  <button class="delete-td btn btn-outline-danger">X</button>
               </li>`;
       };
     });
@@ -189,18 +189,26 @@ function verification(){
 }
 }
 
+function marking(thisButton){
+   $(".marker").addClass("disabled");
+   thisButton.removeClass("disabled").addClass("active");
+}
+
 $(document).on("click", "#btnCompleteTrue", function() {
+  marking($(this))
   choice = 'c'
   verification()
 })
 
 $(document).on("click", "#btnCompleteFalse", function() {
   choice = 'l'
+  marking($(this))
   verification()
 })
 
 $(document).on("click", "#showAll", function() {
   choice = 'a'
+  marking($(this))
   verification()
 })
 })
