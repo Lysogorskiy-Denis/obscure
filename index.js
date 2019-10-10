@@ -2,25 +2,25 @@ const todoOnPage = 5;
 let nowPage = 1;
 
 
+
 $(document).ready(function() {
   const $todoBTN = $("#todoBtn");
   const $todoInput = $("#todoInput");
   const $DltCTasks = $("#DeleteCTasks");
   const $dltAll = $("#deleteAll");
-  let $btnSelect = $("#checkbox");
   let mass = [];
-  
+  let choice = 'a'
 
   $dltAll.on("click", function() {
     mass = [];
-    render(mass)
+    verification()
   });
 
   $DltCTasks.on("click", function() {
     mass = mass.filter(function(item) {
       return !item.checked;
     });
-    render(mass);
+    verification()
   });
 
   $todoBTN.on("click", function() {
@@ -28,7 +28,11 @@ $(document).ready(function() {
   });
 
   function AddListTask() {
-    const text = $todoInput.val().trim();
+
+    
+    const text = $todoInput.val()
+                .trim().replace(/&/g, '')
+                .replace(/~/g, '').replace(/{/g, '').replace(/'/g, '').replace(/#/g, '').replace(/</g, '').replace(/}/g, '').replace(/>/g, '');
     const newTodo = {
       text: text.trim(),
       checked: false,
@@ -37,7 +41,7 @@ $(document).ready(function() {
     if (text == "") return;
     mass.push(newTodo);
     $todoInput.prop("value","")
-    render(mass);
+    verification()
   }
 
   $(document).on(`dblclick`, `.text-todo`, function() {
@@ -62,25 +66,27 @@ $(document).ready(function() {
           }
         }
       });
-      render(mass);
+      verification()
     }
   });
 
   function render(glob) {
-    console.log('glob', glob)
-    countTrue()
-    let isEveryChecked = glob.every(function(item){return item.checked});
+    
+    let isEveryChecked = mass.every(function(item){return item.checked});
     $('#checkbox-all').prop('checked', isEveryChecked);
     let howMachPage = Math.ceil(glob.length/todoOnPage)
     if(howMachPage<1) howMachPage = 1;
     $(`#pagination`).html("");
     if(howMachPage>1){
-      let stringPagination = "<button id=left> < </button>";
+      let stringPagination = '<nav aria-label="Page navigation example">'
+                            +` <ul class="pagination"> <li id = left class="page-item ${1==nowPage? "disabled" :""} "> `
+                            +' <a class="page-link" href="#" aria-label="Previous"> '
+                            +'<span aria-hidden="true">&laquo;</span>   </a></li>'
       for(i=1;i<=howMachPage;++i){
         stringPagination += `
-        <button id=${i} class=pgntn >${i} </button>`
+        <li id=${i} class="page-item pgntn ${i==nowPage? "disabled" :""}"><a class="page-link" href="#">${i}</a></li>`
       }
-      stringPagination +=" <button id=right> > </button>"
+      stringPagination +=`<li id = right class="page-item ${howMachPage == nowPage? "disabled" :""}"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li ></ul></nav>`
       $(`#pagination`).html(stringPagination);
     }
     
@@ -99,7 +105,7 @@ $(document).ready(function() {
                       ${item.checked ? "checked" : ""} 
                   >
                   <span class="text-todo">${item.text}</span>
-                  <button class="delete-td">X</button>
+                  <button class="delete-td btn btn-outline-danger">X</button>
               </li>`;
       };
     });
@@ -108,17 +114,17 @@ $(document).ready(function() {
 
   $(document).on(`click`, '#left', function(){
   if( nowPage > 1) --nowPage;
-  render(mass)
+  verification()
   })
 
   $(document).on(`click`, '#right', function(){
     ++nowPage;
-    render(mass)
+    verification()
     })
 
   $(document).on(`click`, '.pgntn', function(){
     nowPage = $(this).attr(`id`);
-    render(mass);
+    verification()
   })
 
   $(document).on(`change`, `.check-todo`, function() {
@@ -130,7 +136,7 @@ $(document).ready(function() {
         item.checked = !item.checked;
       }
     });
-    render(mass)
+    verification()
   });
 
   $(document).on("click", ".delete-td", function() {
@@ -141,7 +147,7 @@ $(document).ready(function() {
       if (b == item.id) {
         mass.splice(index, 1);
       }
-      render(mass);
+      verification()
     });
   });
   $(`#todoInput`).on("keypress", function(ent) {
@@ -155,32 +161,43 @@ $(document).ready(function() {
     mass.forEach((item) => {
     item.checked = check
 })
-render(mass);
+verification()
 })
+let complete = []
+let laziness = []
 
 function countTrue() {
-  let complete = mass.filter(item => item.checked===true)
+  complete = mass.filter(item => item.checked===true)
   lengthTrue = complete.length
   $("#completeTrue").html(lengthTrue)
-  let notDone = mass.length - lengthTrue
-  $("#completeFalse").html(notDone)
-  
+  laziness = mass.filter(item => item.checked===false)
+  lengthFalse = laziness.length
+  $("#completeFalse").html(lengthFalse)
+}
+
+function verification(){
+  countTrue()
+  if(choice == 'c'){
+    render(complete)
+  }else if(choice == 'l'){
+     render(laziness)
+} else{
+  render(mass)
+}
 }
 
 $(document).on("click", "#btnCompleteTrue", function() {
-  const complete1 = mass.filter(item => item.checked===true)
-  console.log('complete1', complete1)
-render(complete1)
-  })
+  choice = 'c'
+  verification()
+})
 
 $(document).on("click", "#btnCompleteFalse", function() {
-  const notComplete = mass.filter(item => item.checked===false)
-  console.log('notComplete', notComplete)
-  render(notComplete)
+  choice = 'l'
+  verification()
 })
 
 $(document).on("click", "#showAll", function() {
-render(mass)
+  choice = 'a'
+  verification()
 })
-
 })
