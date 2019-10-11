@@ -7,7 +7,9 @@
 </head> 
 <body>
   
-  <h2>ToDo list</h2>
+  
+  <h2 align="center">ToDo list</h2>
+
   <h4><button id = btnCompleteTrue class="btn btn-info disabled marker">Completed:</button> <strong id=completeTrue> </strong></h4 >
   <h4><button id = btnCompleteFalse class="btn btn-secondary disabled marker">Not done:</button><strong id=completeFalse></strong></h4>
   <h5><button id=showAll class="btn btn-success disabled marker">Show all tasks</button></h5>
@@ -18,11 +20,11 @@
   <button id="todoBtn" class="btn btn-success">Add</button>
   <div id="list"></div>
   </div>
-  <button id="deleteAll" class="btn btn-danger">Сlear the list</button>
+  <button id="deleteAll" class="btn btn-danger">Clear the list</button>
   <input type="checkbox"  id="checkbox-all" > Select all 
 
   <div>
-    <label> Task list </label>
+    <label id="tasks" class="display-4"> Task list </label>
   <ul id="out-todo"></ul>             
   </div>  
   <div id="pagination"> </div>
