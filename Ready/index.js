@@ -1,30 +1,10 @@
-/* eslint-disable no-unmodified-loop-condition */
-/* eslint-disable linebreak-style */
-// eslint-disable-next-line linebreak-style
-/* eslint-disable no-invalid-this */
-/* eslint-disable max-len */
-/* eslint-disable new-cap */
-
-/* eslint-disable prefer-destructuring */
-
-/* eslint-disable no-undef */
 /* eslint-disable max-lines-per-function */
-/* eslint-disable no-magic-numbers */
-
-/* eslint-disable eqeqeq */
-/* eslint-disable sort-keys */
-/* eslint-disable require-unicode-regexp */
-/* eslint-disable require-jsdoc */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable no-use-before-define */
 
 
 const todoOnPage = 5;
 
 let nowPage = 1;
 
-
-// eslint-disable-next-line max-lines-per-function
 $(document).ready(() => {
   const $todoBTN = $('#todoBtn');
   const $todoInput = $('#todoInput');
@@ -47,6 +27,7 @@ $(document).ready(() => {
   });
 
   $todoBTN.on('click', () => {
+    nowPage = 1;
     // eslint-disable-next-line new-cap
     AddListTask();
   });
@@ -208,6 +189,7 @@ $(document).ready(() => {
   });
   $(`#todoInput`).on('keypress', ent => {
     if (ent.which == 13) {
+      nowPage = 1;
       AddListTask();
     }
   });
@@ -250,14 +232,13 @@ $(document).ready(() => {
     }
   }
 
-  // eslint-disable-next-line func-style
+
   function marking(thisButton) {
     $('.marker').addClass('disabled');
     thisButton.removeClass('disabled').addClass('active');
   }
 
   $(document).on('click', '#btnCompleteTrue', function() {
-    // eslint-disable-next-line no-invalid-this
     marking($(this));
     choice = 'c';
     verification();

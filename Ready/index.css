@@ -45,6 +45,13 @@ display: inline;
 #tasks{
     margin-left: 370px;
 }
+ .text-todo {
+
+    background: #f0f0f0; /* Цвет фона */
+    width: 150px; /* Ширина блока */
+    padding: 0px; /* Поля */
+    word-break: break-all; /* Перенос слов */
+    max-width: 500;
 
 
 
