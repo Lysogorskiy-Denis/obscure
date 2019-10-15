@@ -1,0 +1,48 @@
+const editorText = () => {
+  const id = parseInt($(this).parent()
+      .attr(`id`));
+    const newText = fixText($(this).val());
+
+    mainArray.forEach(item => {
+      if (id === item.id) {
+        if (newText !== '') {
+          item.text = newText;
+        }
+      }
+    });
+    verification();
+}
+
+const unfocus = () => {
+  $('#newText').focus();
+  $(document).on('blur', `.new-input`, function(saveWithEnter) {
+    saveWithEnter.which = BUTTON_ENTER;
+    editorText();
+  });
+}
+
+  $(document).on(`dblclick`, `.text-todo`, function() {
+    $(this).replaceWith(`<input type="text.val" 
+                            id="newText"
+                            class="new-input form-control"
+                            value="${$(this).text()}"/>`);
+                            unfocus();
+  });
+
+
+  $(document).on('keypress', `.new-input`, function(saveNewTask) {
+    if (saveNewTask.which === BUTTON_ENTER) {
+      editorText();
+    }
+  });
+
+
+  $(document).on(`click`, '#left', () => {
+    if (nowPage > 1) --nowPage;
+    verification();
+  });
+
+  $(document).on(`click`, '#right', () => {
+    if (nowPage < numberOfPages) ++nowPage;
+    verification();
+  });
