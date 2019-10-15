@@ -1,0 +1,82 @@
+#todo-input{
+    margin-left: 370px; 
+     width: 50%; 
+display: inline;
+}
+#todo-button{
+     margin-bottom: 6.3px; 
+    display: inline;
+}
+#delete-all{
+    margin-left: 370px;
+    margin-bottom: 6.3px;  
+    display: inline;
+} 
+#button-complete-true{
+    margin-left: 370px;
+    margin-bottom: 6.3px;
+    border-radius: 1.25rem;
+    display: inline;
+} 
+#button-complete-false{
+    margin-left: 370px;
+    margin-bottom: 6.3px;
+    border-radius: 1.25rem;
+    display: inline;
+} 
+#show-all{
+    margin-left: 370px;
+    margin-bottom: 6.3px;
+    display: inline;
+} 
+#delete-complete-tasks{
+    margin-left: 370px;
+    margin-bottom: 6.3px;
+    display: inline;
+} 
+#out-todo{
+    margin-left: 370px;
+    font-size: 25px;
+}
+#pagination{
+    margin-left: 370px;
+}
+#tasks{
+    margin-left: 370px;
+}
+ .text-todo {
+    padding: 0px;
+    word-break: break-all;
+ }
+
+.check-todo {
+    align-items: flex-start;
+    align-items: flex-end;
+    align-items: center;
+    align-items: baseline;
+    align-items: stretch;
+    -webkit-align-self: center; 
+     align-self: center;
+}
+.middle-pag {
+    color: #fff;
+    display: flex;
+}
+.middle-pag > td {
+display: flex;
+align-items: center;
+}
+td.middle-pag__text {
+    flex: 1
+}
+.wer{
+width: 100%;
+max-width: 1350px;
+}
+.todo-list{
+    margin-left: 700px;
+}
+.back-ground{
+    background: #c7b39b url(todos.jpg);
+    color: #fff;
+}
