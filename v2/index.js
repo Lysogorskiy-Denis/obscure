@@ -35,6 +35,7 @@ $(document).ready(() => {
 
   const pagination = glob => {
     let str = '';
+
     numberOfPages = Math.ceil(glob.length / TODO_ON_PAGE);
     if (nowPage > numberOfPages) {
       nowPage = numberOfPages;
@@ -50,7 +51,8 @@ $(document).ready(() => {
 
       for (let i = 1; i <= numberOfPages; ++i) {
         stringPagination += `
-      <li id=${i} class="page-item pagination-buttons ${i === nowPage ? 'active' : ''}">
+      <li id=${i} 
+      class="page-item pagination-buttons ${i === nowPage ? 'active' : ''}">
       <a class="page-link" href="#">${i}</a></li>`;
       }
       stringPagination
@@ -108,15 +110,18 @@ $(document).ready(() => {
   };
 
   const fixText = text => {
-  return text.trim() 
-    .replace(/&/gu, '&amp;')
-    .replace(/~/gu, '')
-    .replace(/"/gu, '&quot;')
-    .replace(/#/gu, '')
-    .replace(/</gu, '&lt;')
-    .replace(/>/gu, '&gt;')
-    .replace(/'/gu, '&#39;');
-  }
+    const a = text.trim()
+      .replace(/&/gu, '&amp;')
+      .replace(/~/gu, '')
+      .replace(/"/gu, '&quot;')
+      .replace(/#/gu, '')
+      .replace(/</gu, '&lt;')
+      .replace(/>/gu, '&gt;')
+      .replace(/'/gu, '&#39;');
+
+
+    return a;
+  };
 
   const addListTask = () => {
     const text = fixText($todoInput.val());
@@ -158,31 +163,31 @@ $(document).ready(() => {
     verification();
   });
 
-const unfocus = () => {
-  $('#newText').focus();
-  $(document).on('blur', `.new-input`, function(saveWithEnter) {
-    saveWithEnter.which = BUTTON_ENTER;
-    const id = parseInt($(this).parent()
-      .attr(`id`));
-    const newText = fixText($(this).val());
+  const unfocus = () => {
+    $('#newText').focus();
+    $(document).on('blur', `.new-input`, function(saveWithEnter) {
+      saveWithEnter.which = BUTTON_ENTER;
+      const id = parseInt($(this).parent()
+        .attr(`id`));
+      const newText = fixText($(this).val());
 
-    mainArray.forEach(item => {
-      if (id === item.id) {
-        if (newText !== '') {
-          item.text = newText;
+      mainArray.forEach(item => {
+        if (id === item.id) {
+          if (newText !== '') {
+            item.text = newText;
+          }
         }
-      }
+      });
+      verification();
     });
-    verification();
-  });
-}
+  };
 
   $(document).on(`dblclick`, `.text-todo`, function() {
     $(this).replaceWith(`<input type="text.val" 
                             id="newText"
                             class="new-input form-control"
                             value="${$(this).text()}"/>`);
-                            unfocus();
+    unfocus();
   });
 
 
@@ -194,7 +199,7 @@ const unfocus = () => {
 
       mainArray.forEach(item => {
         if (id === item.id) {
-          if (newText !=='') {
+          if (newText !== '') {
             item.text = newText;
           }
         }
@@ -243,7 +248,9 @@ const unfocus = () => {
         mainArray.splice(index, 1);
       }
       if (nowPage > numberOfPages) {
+        nowPage = numberOfPages;
       }
+
       verification();
     });
   });
