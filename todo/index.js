@@ -103,15 +103,13 @@ $(document).ready(() => {
       isEveryChecked = false;
     }
     $checkboxAll.prop('checked', isEveryChecked);
-
     pagination(glob);
     $(`#out-todo`).html(printTodo(glob));
   };
 
 
-  const verification = function() {
+  const verification = function() { 
     countTrue();
-
 
     if (choiceTab === 'com') {
       render(completeArray);
@@ -120,6 +118,7 @@ $(document).ready(() => {
     } else {
       render(mainArray);
     }
+    
   };
 
   const fixText = text => {
@@ -169,7 +168,6 @@ $(document).ready(() => {
 
 
   $addTodo.on('click', () => {
-    nowPage = 1;
     choiceTab = 'all';
     addListTask();
     colorChange();
@@ -272,7 +270,6 @@ $(document).ready(() => {
 
   $todoInput.on('keypress', addNewTask => {
     if (addNewTask.which === BUTTON_ENTER) {
-      nowPage = 1;
       choiceTab = 'all';
       addListTask();
       colorChange();
@@ -289,7 +286,6 @@ $(document).ready(() => {
     mainArray.forEach(item => {
       item.checked = check;
     });
-    nowPage = 1;
     verification();
   });
 
@@ -305,6 +301,7 @@ $(document).ready(() => {
   };
 
   $(document).on('click', '#button-complete-true', function() {
+    
     choiceArr('com', $(this));
   });
 
