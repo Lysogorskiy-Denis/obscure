@@ -18,7 +18,7 @@ $(document).ready(() => {
   let numberOfPages;
   let isEveryChecked;
 
-  const countTrue = () => {
+  const countTrue = function() {
     completeArray = mainArray.filter(item => item.checked === true);
     const { length: lengthTrue } = completeArray;
 
@@ -29,57 +29,67 @@ $(document).ready(() => {
 
 
     $('#complete-false').html(lengthFalse);
+    if (nowPage === 0) nowPage = 1;
   };
 
+  const buttonPagination = () => {
+    let stringPagination = '<nav aria-label="Page navigation example ">'
+  + ` <ul class="pagination">`
+  + ` <li id = left class="page-item ${nowPage === 1 ? 'disabled' : ''} "> `
+  + ' <a class="page-link" href="#" aria-label="Previous"> '
+  + '<span aria-hidden="true">&laquo;</span></a></li>';
+
+    for (let i = 1; i <= numberOfPages; ++i) {
+      stringPagination += `
+        <li id=${i} 
+        class="page-item pagination-buttons ${i === nowPage ? 'active' : ''}">
+        <a class="page-link" href="#">${i}</a></li>`;
+    }
+    stringPagination
+        += `<li id = right 
+          class="page-item ${numberOfPages === nowPage ? 'disabled' : ''}">
+        <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;
+        </span></a></li ></ul></nav>`;
+    $(`#pagination`).html(stringPagination);
+  };
 
   const pagination = glob => {
     numberOfPages = Math.ceil(glob.length / TODO_ON_PAGE);
-    if (nowPage > numberOfPages) {
-      nowPage = numberOfPages;
-    }
-    if (numberOfPages < 1) numberOfPages = 1;
     $('#pagination').html('');
-    if (numberOfPages > 1) {
-      let stringPagination = '<nav aria-label="Page navigation example ">'
-+ ` <ul class="pagination">`
-+ ` <li id = left class="page-item ${nowPage === 1 ? 'disabled' : ''} "> `
-+ ' <a class="page-link" href="#" aria-label="Previous"> '
-+ '<span aria-hidden="true">&laquo;</span></a></li>';
-
-      for (let i = 1; i <= numberOfPages; ++i) {
-        stringPagination += `
-      <li id=${i} class="page-item pgntn ${i === nowPage ? 'active' : ''}">
-      <a class="page-link" href="#">${i}</a></li>`;
-      }
-      stringPagination
-      += `<li id = right 
-        class="page-item ${numberOfPages === nowPage ? 'disabled' : ''}">
-      <a class="page-link" href="#" aria-label="Next">
-      <span aria-hidden="true">&raquo;
-      </span></a></li ></ul></nav>`;
-      $(`#pagination`).html(stringPagination);
-    }
-
-    let str = '';
+    if (numberOfPages < 1) numberOfPages = 1;
 
     if (numberOfPages < nowPage) {
       nowPage = numberOfPages;
     }
+    if (nowPage > numberOfPages) {
+      nowPage = numberOfPages;
+    }
+  };
 
+  const printTodo = glob => {
+    let str = '';
+
+    if (nowPage > numberOfPages) {
+      nowPage = numberOfPages;
+    }
+
+    if (numberOfPages > 1) {
+      buttonPagination();
+    }
     glob.forEach((item, i) => {
       if ((nowPage - 1) * TODO_ON_PAGE <= i && i < nowPage * TODO_ON_PAGE) {
         str += `<tr class="middle-pag">
-         <td id="${item.id}">
-          <input type="checkbox" 
-            class="check-todo" ${item.checked ? 'checked' : ''} />
-         </td>
-      <td id="${item.id}"class="middle-pag__text">
-      <span class="text-todo"> 
-      ${item.text}
-       </span> </td>
-      <td id="${item.id}" > <button class="delete-td btn btn-outline-danger"> X 
-      </button></td>
-      </tr>`;
+        <td id="${item.id}">
+        <input type="checkbox" 
+        class="check-todo" ${item.checked ? 'checked' : ''} />
+        </td>
+        <td id="${item.id}"class="middle-pag__text">
+        <span class="text-todo">${item.text}</span>
+        </td>
+        <td id="${item.id}"><button class="delete-td btn btn-outline-danger"> X 
+        </button></td>
+        </tr>`;
       }
     });
 
@@ -93,11 +103,16 @@ $(document).ready(() => {
       isEveryChecked = false;
     }
     $checkboxAll.prop('checked', isEveryChecked);
-    $(`#out-todo`).html(pagination(glob));
+
+    pagination(glob);
+    $(`#out-todo`).html(printTodo(glob));
   };
 
-  const verification = () => {
+
+  const verification = function() {
     countTrue();
+
+
     if (choiceTab === 'com') {
       render(completeArray);
     } else if (choiceTab === 'laz') {
@@ -107,14 +122,19 @@ $(document).ready(() => {
     }
   };
 
-  const fixText = text => text.trim()
-    .replace(/&/gu, '&amp;')
-    .replace(/~/gu, '')
-    .replace(/"/gu, '&quot;')
-    .replace(/#/gu, '')
-    .replace(/</gu, '&lt;')
-    .replace(/>/gu, '&gt;')
-    .replace(/'/gu, '&#39;');
+  const fixText = text => {
+    const validation = text.trim()
+      .replace(/&/gu, '&amp;')
+      .replace(/~/gu, '')
+      .replace(/"/gu, '&quot;')
+      .replace(/#/gu, '')
+      .replace(/</gu, '&lt;')
+      .replace(/>/gu, '&gt;')
+      .replace(/'/gu, '&#39;');
+
+
+    return validation;
+  };
 
   const addListTask = () => {
     const text = fixText($todoInput.val());
@@ -122,11 +142,13 @@ $(document).ready(() => {
       checked: false,
       id: Date.now(),
       text: text.trim(),
+
     };
+
 
     if (text === '') return;
     mainArray.unshift(newTodo);
-    $todoInput.prop('value', '');
+    $todoInput.val('');
     verification();
   };
 
@@ -156,14 +178,10 @@ $(document).ready(() => {
     verification();
   });
 
-  $(document).on(`dblclick`, `.text-todo`, function() {
-    $(this).replaceWith(`<input type="text.val" 
-                            id="newText"
-                            class="new-input form-control"
-                            value="${$(this).text()}"/>`);
+  const unfocus = () => {
     $('#newText').focus();
-    $(document).on('blur', `.new-input`, function(blurFun) {
-      blurFun.which = BUTTON_ENTER;
+    $(document).on('blur', `.new-input`, function(saveWithEnter) {
+      saveWithEnter.which = BUTTON_ENTER;
       const id = parseInt($(this).parent()
         .attr(`id`));
       const newText = fixText($(this).val());
@@ -177,11 +195,19 @@ $(document).ready(() => {
       });
       verification();
     });
+  };
+
+  $(document).on(`dblclick`, `.text-todo`, function() {
+    $(this).replaceWith(`<input type="text.val" 
+                            id="newText"
+                            class="new-input form-control"
+                            value="${$(this).text()}"/>`);
+    unfocus();
   });
 
 
-  $(document).on('keypress', `.new-input`, function(ent) {
-    if (ent.which === BUTTON_ENTER) {
+  $(document).on('keypress', `.new-input`, function(saveNewTask) {
+    if (saveNewTask.which === BUTTON_ENTER) {
       const id = parseInt($(this).parent()
         .attr(`id`));
       const newText = fixText($(this).val());
@@ -208,7 +234,7 @@ $(document).ready(() => {
     verification();
   });
 
-  $(document).on(`click`, '.pgntn', function() {
+  $(document).on(`click`, '.pagination-buttons', function() {
     nowPage = parseInt($(this).attr(`id`));
 
     verification();
@@ -239,12 +265,13 @@ $(document).ready(() => {
       if (nowPage > numberOfPages) {
         nowPage = numberOfPages;
       }
+
       verification();
     });
   });
 
-  $todoInput.on('keypress', ent => {
-    if (ent.which === BUTTON_ENTER) {
+  $todoInput.on('keypress', addNewTask => {
+    if (addNewTask.which === BUTTON_ENTER) {
       nowPage = 1;
       choiceTab = 'all';
       addListTask();
@@ -266,29 +293,26 @@ $(document).ready(() => {
     verification();
   });
 
-  const marking = function(thisButton) {
+  const marking = function(typicalName, thisButton) {
     colorChange();
     thisButton.removeClass('btn-success').addClass('btn-warning');
   };
 
+  const choiceArr = function(typicalName, thisButton) {
+    choiceTab = typicalName;
+    marking(typicalName, thisButton);
+    verification(typicalName);
+  };
+
   $(document).on('click', '#button-complete-true', function() {
-    marking($(this));
-    choiceTab = 'com';
-    if (nowPage === 0) nowPage = 1;
-    verification();
+    choiceArr('com', $(this));
   });
 
   $(document).on('click', '#button-complete-false', function() {
-    if (nowPage === 0) nowPage = 1;
-    choiceTab = 'laz';
-    marking($(this));
-    verification();
+    choiceArr('laz', $(this));
   });
 
   $(document).on('click', '#show-all', function() {
-    if (nowPage === 0) nowPage = 1;
-    choiceTab = 'all';
-    marking($(this));
-    verification();
+    choiceArr('all', $(this));
   });
 });
